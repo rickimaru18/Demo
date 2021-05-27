@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:morphosis_flutter_demo/non_ui/modal/task.dart';
+import 'package:morphosis_flutter_demo/non_ui/providers/repository.dart';
+import 'package:morphosis_flutter_demo/non_ui/providers/viewmodels/home_viewmodel.dart';
 import 'package:morphosis_flutter_demo/non_ui/providers/viewmodels/task_viewmodel.dart';
 import 'package:morphosis_flutter_demo/non_ui/providers/viewmodels/tasks_viewmodel.dart';
 import 'package:morphosis_flutter_demo/ui/screens/index.dart';
 import 'package:morphosis_flutter_demo/ui/screens/task.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
 final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
   // Route to [IndexPage].
-  IndexPage.route: (_) => ChangeNotifierProvider<TasksViewModel>(
-        create: (_) => TasksViewModel(),
+  IndexPage.route: (_) => MultiProvider(
+        providers: <SingleChildWidget>[
+          ChangeNotifierProvider<HomeViewModel>(
+            create: (BuildContext context) =>
+                HomeViewModel(Provider.of<Repository>(context, listen: false)),
+          ),
+          ChangeNotifierProvider<TasksViewModel>(
+            create: (_) => TasksViewModel(),
+          ),
+        ],
         child: const IndexPage(),
       ),
 

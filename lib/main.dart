@@ -2,19 +2,24 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:morphosis_flutter_demo/env.dart';
+import 'package:morphosis_flutter_demo/non_ui/providers/repository.dart';
 import 'package:morphosis_flutter_demo/non_ui/repo/firebase_manager.dart';
+import 'package:morphosis_flutter_demo/non_ui/utils/logger.dart';
 import 'package:morphosis_flutter_demo/routes.dart';
 import 'package:morphosis_flutter_demo/ui/screens/index.dart';
 import 'package:morphosis_flutter_demo/ui/widgets/error_widget.dart';
+import 'package:provider/provider.dart';
 
 const title = 'Morphosis Demo';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Env.init();
   runZonedGuarded(() {
     runApp(FirebaseApp());
   }, (error, stackTrace) {
-    print('runZonedGuarded: Caught error in my root zone.');
+    logger('Main', 'runZonedGuarded: Caught error in my root zone.');
   });
 }
 
@@ -57,7 +62,7 @@ class _FirebaseAppState extends State<FirebaseApp> {
         _initialized = true;
       });
     } catch (e) {
-      print(e);
+      logger('FirebaseApp', 'Exception: $e');
       setState(() {
         _error = true;
       });
@@ -93,17 +98,19 @@ class _FirebaseAppState extends State<FirebaseApp> {
 }
 
 class App extends StatelessWidget {
-  ///TODO: Try to implement themeing and use it throughout the app
-  /// For reference : https://flutter.dev/docs/cookbook/design/themes
-  ///
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: title,
-      routes: routes,
-      initialRoute: IndexPage.route,
+    return Provider(
+      create: (_) => Repository(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: title,
+        theme: ThemeData(
+          primarySwatch: Colors.purple,
+        ),
+        routes: routes,
+        initialRoute: IndexPage.route,
+      ),
     );
   }
 }

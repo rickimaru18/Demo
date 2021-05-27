@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:morphosis_flutter_demo/env.dart';
 import 'package:morphosis_flutter_demo/non_ui/modal/task.dart';
 
 class FirebaseManager {
@@ -25,7 +26,7 @@ class FirebaseManager {
 
   /// Tasks collection reference.
   CollectionReference get _tasksRef =>
-      FirebaseFirestore.instance.collection('tasks_rick');
+      FirebaseFirestore.instance.collection(Env.firestoreTasksCollection);
 
   /// Get tasks from Firestore.
   Stream<List<Task>> get tasks => _tasksRef
