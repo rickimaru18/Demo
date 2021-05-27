@@ -11,29 +11,36 @@ class FirebaseManager {
 
   static FirebaseManager? _one;
 
-  Future<void> initialise() => Firebase.initializeApp();
+  bool _isInit = false;
 
-  FirebaseFirestore get firestore => FirebaseFirestore.instance;
+  /// Initialize Firebase.
+  Future<void> initialise() async {
+    if (_isInit) {
+      return;
+    }
 
-  //TODO: change collection name to something unique or your name
-  CollectionReference get tasksRef =>
-      FirebaseFirestore.instance.collection('tasks');
-
-  //TODO: replace mock data. Remember to set the task id to the firebase object id
-  List<Task> get tasks => mockData.map((t) => Task.fromJson(t)).toList();
-
-  //TODO: implement firestore CRUD functions here
-  void addTask(Task task) {
-    tasksRef.add(task.toJson());
+    await Firebase.initializeApp();
+    _isInit = true;
   }
+
+  /// Tasks collection reference.
+  CollectionReference get _tasksRef =>
+      FirebaseFirestore.instance.collection('tasks_rick');
+
+  /// Get tasks from Firestore.
+  Stream<List<Task>> get tasks => _tasksRef
+      .orderBy('id', descending: true)
+      .snapshots()
+      .map((event) => event.docs
+          .map((e) => Task.fromJson(e.data()! as Map<String, dynamic>))
+          .toList());
+
+  /// Add [task] to Firestore.
+  Future<void> addTask(Task task) => _tasksRef.doc(task.id).set(task.toJson());
+
+  /// Update [task] from Firestore.
+  Future<void> updateTask(Task task) => addTask(task);
+
+  /// Delete [task] from Firestore.
+  Future<void> deleteTask(Task task) => _tasksRef.doc(task.id).delete();
 }
-
-List<Map<String, dynamic>> mockData = [
-  {"id": "1", "title": "Task 1", "description": "Task 1 description"},
-  {
-    "id": "2",
-    "title": "Task 2",
-    "description": "Task 2 description",
-    "completed_at": DateTime.now().toIso8601String()
-  }
-];

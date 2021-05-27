@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:morphosis_flutter_demo/non_ui/repo/firebase_manager.dart';
 import 'package:morphosis_flutter_demo/ui/screens/home.dart';
 import 'package:morphosis_flutter_demo/ui/screens/tasks.dart';
 
 class IndexPage extends StatefulWidget {
+  const IndexPage({
+    Key? key,
+  }) : super(key: key);
+
+  static const String route = '/';
+
   @override
   _IndexPageState createState() => _IndexPageState();
 }
 
 class _IndexPageState extends State<IndexPage> {
+  final List<Widget> _children = const <Widget>[
+    HomePage(),
+    TasksPage(title: 'All Tasks'),
+    TasksPage(title: 'Completed Tasks', isCompletedOnly: true)
+  ];
+
   int _currentIndex = 0;
 
-  void onTabTapped(int index) {
+  void _onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
     });
@@ -19,22 +30,10 @@ class _IndexPageState extends State<IndexPage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> children = [
-      const HomePage(),
-      TasksPage(
-        title: 'All Tasks',
-        tasks: FirebaseManager().tasks,
-      ),
-      TasksPage(
-        title: 'Completed Tasks',
-        tasks: FirebaseManager().tasks.where((t) => t.isCompleted).toList(),
-      )
-    ];
-
     return Scaffold(
-      body: children[_currentIndex],
+      body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        onTap: onTabTapped,
+        onTap: _onTabTapped,
         currentIndex: _currentIndex,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

@@ -1,13 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:morphosis_flutter_demo/non_ui/modal/task.dart';
-import 'package:morphosis_flutter_demo/non_ui/repo/firebase_manager.dart';
+import 'package:morphosis_flutter_demo/non_ui/providers/viewmodels/task_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class TaskPage extends StatelessWidget {
   const TaskPage({
     this.task,
     Key? key,
   }) : super(key: key);
+
+  static const String route = '/task';
 
   final Task? task;
 
@@ -17,18 +20,27 @@ class TaskPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(task == null ? 'New Task' : 'Edit Task'),
       ),
-      body: _TaskForm(task),
+      body: _TaskForm(
+        task,
+        onSave: (Task task) async {
+          await Provider.of<TaskViewModel>(context, listen: false).save(task);
+          Navigator.pop(context);
+        },
+      ),
     );
   }
 }
 
+//------------------------------------------------------------------------------
 class _TaskForm extends StatefulWidget {
   const _TaskForm(
     this.task, {
+    this.onSave,
     Key? key,
   }) : super(key: key);
 
   final Task? task;
+  final ValueChanged<Task>? onSave;
 
   @override
   __TaskFormState createState() => __TaskFormState();
@@ -41,23 +53,12 @@ class __TaskFormState extends State<_TaskForm> {
   late TextEditingController _descriptionController;
   late Task _task;
 
-  void init() {
+  @override
+  void initState() {
+    super.initState();
     _task = widget.task ?? Task();
     _titleController = TextEditingController(text: _task.title);
     _descriptionController = TextEditingController(text: _task.description);
-  }
-
-  @override
-  void initState() {
-    init();
-    super.initState();
-  }
-
-  void _save(BuildContext context) {
-    //TODO implement save to firestore
-
-    FirebaseManager().addTask(_task);
-    Navigator.of(context).pop();
   }
 
   @override
@@ -66,7 +67,7 @@ class __TaskFormState extends State<_TaskForm> {
       child: Container(
         padding: const EdgeInsets.all(_padding),
         child: Column(
-          children: [
+          children: <Widget>[
             TextField(
               controller: _titleController,
               decoration: const InputDecoration(
@@ -90,7 +91,7 @@ class __TaskFormState extends State<_TaskForm> {
               children: [
                 const Text('Completed ?'),
                 CupertinoSwitch(
-                  value: widget.task?.isCompleted ?? false,
+                  value: _task.isCompleted,
                   onChanged: (_) {
                     setState(() {
                       _task.toggleComplete();
@@ -101,7 +102,11 @@ class __TaskFormState extends State<_TaskForm> {
             ),
             const Spacer(),
             ElevatedButton(
-              onPressed: () => _save(context),
+              onPressed: () {
+                _task.title = _titleController.text;
+                _task.description = _descriptionController.text;
+                widget.onSave?.call(_task);
+              },
               child: SizedBox(
                 width: double.infinity,
                 child: Center(child: Text(_task.isNew ? 'Create' : 'Update')),
@@ -111,5 +116,12 @@ class __TaskFormState extends State<_TaskForm> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
   }
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:morphosis_flutter_demo/non_ui/repo/firebase_manager.dart';
+import 'package:morphosis_flutter_demo/routes.dart';
 import 'package:morphosis_flutter_demo/ui/screens/index.dart';
 import 'package:morphosis_flutter_demo/ui/widgets/error_widget.dart';
 
@@ -96,15 +97,13 @@ class App extends StatelessWidget {
   /// For reference : https://flutter.dev/docs/cookbook/design/themes
   ///
 
-  ///TODO: Restructure folders pr rearrange folders based on your need.
-  ///TODO: Implement state management of your choice.
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: title,
-      home: IndexPage(),
+      routes: routes,
+      initialRoute: IndexPage.route,
     );
   }
 }
