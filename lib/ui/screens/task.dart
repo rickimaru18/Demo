@@ -69,6 +69,7 @@ class __TaskFormState extends State<_TaskForm> {
         child: Column(
           children: <Widget>[
             TextField(
+              key: const Key('title'),
               controller: _titleController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -77,6 +78,7 @@ class __TaskFormState extends State<_TaskForm> {
             ),
             const SizedBox(height: _padding),
             TextField(
+              key: const Key('description'),
               controller: _descriptionController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
