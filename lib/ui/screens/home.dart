@@ -11,7 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController _searchTextField = TextEditingController();
+  final TextEditingController _searchTextField = TextEditingController();
 
   @override
   void initState() {
@@ -31,16 +31,14 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home"),
-        actions: [],
+        title: const Text("Home"),
       ),
       body: Container(
-        padding: EdgeInsets.all(15),
+        padding: const EdgeInsets.all(15),
         height: size.height,
         width: size.width,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             /* In this section we will be testing your skills with network and local storage. You need to fetch data from any open source api from the internet. 
              E.g: 
@@ -54,12 +52,12 @@ class _HomePageState extends State<HomePage> {
             CupertinoSearchTextField(
               controller: _searchTextField,
             ),
-            Spacer(),
-            Text(
+            const Spacer(),
+            const Text(
               "Call any api you like from open apis and show them in a list. ",
               textAlign: TextAlign.center,
             ),
-            Spacer(),
+            const Spacer(),
           ],
         ),
       ),

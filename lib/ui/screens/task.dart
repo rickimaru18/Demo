@@ -4,7 +4,10 @@ import 'package:morphosis_flutter_demo/non_ui/modal/task.dart';
 import 'package:morphosis_flutter_demo/non_ui/repo/firebase_manager.dart';
 
 class TaskPage extends StatelessWidget {
-  TaskPage({this.task});
+  const TaskPage({
+    this.task,
+    Key? key,
+  }) : super(key: key);
 
   final Task? task;
 
@@ -20,7 +23,10 @@ class TaskPage extends StatelessWidget {
 }
 
 class _TaskForm extends StatefulWidget {
-  _TaskForm(this.task);
+  const _TaskForm(
+    this.task, {
+    Key? key,
+  }) : super(key: key);
 
   final Task? task;
 
@@ -50,7 +56,7 @@ class __TaskFormState extends State<_TaskForm> {
   void _save(BuildContext context) {
     //TODO implement save to firestore
 
-    FirebaseManager.shared.addTask(_task);
+    FirebaseManager().addTask(_task);
     Navigator.of(context).pop();
   }
 
@@ -63,26 +69,26 @@ class __TaskFormState extends State<_TaskForm> {
           children: [
             TextField(
               controller: _titleController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Title',
               ),
             ),
-            SizedBox(height: _padding),
+            const SizedBox(height: _padding),
             TextField(
               controller: _descriptionController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Description',
               ),
               minLines: 5,
               maxLines: 10,
             ),
-            SizedBox(height: _padding),
+            const SizedBox(height: _padding),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Completed ?'),
+                const Text('Completed ?'),
                 CupertinoSwitch(
                   value: widget.task?.isCompleted ?? false,
                   onChanged: (_) {
@@ -93,10 +99,10 @@ class __TaskFormState extends State<_TaskForm> {
                 ),
               ],
             ),
-            Spacer(),
+            const Spacer(),
             ElevatedButton(
               onPressed: () => _save(context),
-              child: Container(
+              child: SizedBox(
                 width: double.infinity,
                 child: Center(child: Text(_task.isNew ? 'Create' : 'Update')),
               ),

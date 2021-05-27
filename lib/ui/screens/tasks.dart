@@ -3,7 +3,7 @@ import 'package:morphosis_flutter_demo/non_ui/modal/task.dart';
 import 'package:morphosis_flutter_demo/ui/screens/task.dart';
 
 class TasksPage extends StatelessWidget {
-  TasksPage({required this.title, required this.tasks});
+  const TasksPage({required this.title, required this.tasks});
 
   final String title;
   final List<Task> tasks;
@@ -11,7 +11,7 @@ class TasksPage extends StatelessWidget {
   void addTask(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => TaskPage()),
+      MaterialPageRoute(builder: (context) => const TaskPage()),
     );
   }
 
@@ -22,13 +22,13 @@ class TasksPage extends StatelessWidget {
         title: Text(title),
         actions: [
           IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             onPressed: () => addTask(context),
           )
         ],
       ),
       body: tasks.isEmpty
-          ? Center(
+          ? const Center(
               child: Text('Add your first task'),
             )
           : ListView.builder(
@@ -44,7 +44,7 @@ class TasksPage extends StatelessWidget {
 }
 
 class _Task extends StatelessWidget {
-  _Task(this.task);
+  const _Task(this.task);
 
   final Task task;
 
@@ -75,7 +75,7 @@ class _Task extends StatelessWidget {
       title: Text(task.title),
       subtitle: Text(task.description),
       trailing: IconButton(
-        icon: Icon(
+        icon: const Icon(
           Icons.delete,
         ),
         onPressed: _delete,

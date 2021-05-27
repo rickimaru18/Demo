@@ -8,7 +8,7 @@ import 'package:morphosis_flutter_demo/ui/widgets/error_widget.dart';
 
 const title = 'Morphosis Demo';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runZonedGuarded(() {
     runApp(FirebaseApp());
@@ -30,12 +30,12 @@ class _FirebaseAppState extends State<FirebaseApp> {
   // Define an async function to initialize FlutterFire
   Future<void> _initializeFlutterFire() async {
     // Wait for Firebase to initialize
-    await FirebaseManager.shared.initialise();
+    await FirebaseManager().initialise();
 
     debugPrint("firebase initialized");
 
     // Pass all uncaught errors to Crashlytics.
-    FlutterExceptionHandler? originalOnError = FlutterError.onError;
+    final FlutterExceptionHandler? originalOnError = FlutterError.onError;
     FlutterError.onError = (FlutterErrorDetails errorDetails) async {
       // Forward to original handler.
       originalOnError?.call(errorDetails);
@@ -43,7 +43,7 @@ class _FirebaseAppState extends State<FirebaseApp> {
   }
 
   // Define an async function to initialize FlutterFire
-  void initialize() async {
+  Future<void> initialize() async {
     if (_error) {
       setState(() {
         _error = false;

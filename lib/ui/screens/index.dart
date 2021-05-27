@@ -19,16 +19,15 @@ class _IndexPageState extends State<IndexPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> children = [
-      HomePage(),
+    final List<Widget> children = [
+      const HomePage(),
       TasksPage(
         title: 'All Tasks',
-        tasks: FirebaseManager.shared.tasks,
+        tasks: FirebaseManager().tasks,
       ),
       TasksPage(
         title: 'Completed Tasks',
-        tasks:
-            FirebaseManager.shared.tasks.where((t) => t.isCompleted).toList(),
+        tasks: FirebaseManager().tasks.where((t) => t.isCompleted).toList(),
       )
     ];
 
@@ -37,7 +36,7 @@ class _IndexPageState extends State<IndexPage> {
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped,
         currentIndex: _currentIndex,
-        items: [
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
