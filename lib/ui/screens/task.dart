@@ -6,7 +6,7 @@ import 'package:morphosis_flutter_demo/non_ui/repo/firebase_manager.dart';
 class TaskPage extends StatelessWidget {
   TaskPage({this.task});
 
-  final Task task;
+  final Task? task;
 
   @override
   Widget build(BuildContext context) {
@@ -22,29 +22,23 @@ class TaskPage extends StatelessWidget {
 class _TaskForm extends StatefulWidget {
   _TaskForm(this.task);
 
-  final Task task;
+  final Task? task;
+
   @override
-  __TaskFormState createState() => __TaskFormState(task);
+  __TaskFormState createState() => __TaskFormState();
 }
 
 class __TaskFormState extends State<_TaskForm> {
   static const double _padding = 16;
 
-  __TaskFormState(this.task);
-
-  Task task;
-  TextEditingController _titleController;
-  TextEditingController _descriptionController;
+  late TextEditingController _titleController;
+  late TextEditingController _descriptionController;
+  late Task _task;
 
   void init() {
-    if (task == null) {
-      task = Task();
-      _titleController = TextEditingController();
-      _descriptionController = TextEditingController();
-    } else {
-      _titleController = TextEditingController(text: task.title);
-      _descriptionController = TextEditingController(text: task.description);
-    }
+    _task = widget.task ?? Task();
+    _titleController = TextEditingController(text: _task.title);
+    _descriptionController = TextEditingController(text: _task.description);
   }
 
   @override
@@ -56,7 +50,7 @@ class __TaskFormState extends State<_TaskForm> {
   void _save(BuildContext context) {
     //TODO implement save to firestore
 
-    FirebaseManager.shared.addTask(task);
+    FirebaseManager.shared.addTask(_task);
     Navigator.of(context).pop();
   }
 
@@ -90,10 +84,10 @@ class __TaskFormState extends State<_TaskForm> {
               children: [
                 Text('Completed ?'),
                 CupertinoSwitch(
-                  value: task.isCompleted,
+                  value: widget.task?.isCompleted ?? false,
                   onChanged: (_) {
                     setState(() {
-                      task.toggleComplete();
+                      _task.toggleComplete();
                     });
                   },
                 ),
@@ -104,7 +98,7 @@ class __TaskFormState extends State<_TaskForm> {
               onPressed: () => _save(context),
               child: Container(
                 width: double.infinity,
-                child: Center(child: Text(task.isNew ? 'Create' : 'Update')),
+                child: Center(child: Text(_task.isNew ? 'Create' : 'Update')),
               ),
             )
           ],

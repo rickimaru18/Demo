@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:morphosis_flutter_demo/non_ui/repo/firebase_manager.dart';
 import 'package:morphosis_flutter_demo/ui/screens/index.dart';
@@ -34,10 +35,10 @@ class _FirebaseAppState extends State<FirebaseApp> {
     debugPrint("firebase initialized");
 
     // Pass all uncaught errors to Crashlytics.
-    Function originalOnError = FlutterError.onError;
+    FlutterExceptionHandler? originalOnError = FlutterError.onError;
     FlutterError.onError = (FlutterErrorDetails errorDetails) async {
       // Forward to original handler.
-      originalOnError(errorDetails);
+      originalOnError?.call(errorDetails);
     };
   }
 
